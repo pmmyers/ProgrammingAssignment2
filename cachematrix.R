@@ -11,9 +11,9 @@
 makeCacheMatrix <- function(myMatrix = matrix()) {
     inv.myMatrix <- NULL
     set <- function(s.myMatrix) {
-        print('resetting input matrix')  #troubleshooting
+        print('updated input matrix')  # notify matrix is updated
         myMatrix <<- s.myMatrix
-        print(c("setted value", myMatrix)) #troubleshooting
+        print(myMatrix) # display updated matrix
         inv.myMatrix <<- NULL
     }
     get <- function() myMatrix
@@ -44,8 +44,8 @@ cacheSolve <- function(x, ...) {
     newdata <- x$get()      #runs the get function from the list x an assigns the matrix to newdata
     rugby <- solve(newdata, ...) #takes inverse of matrix and assigns to rugby
     x$setInverse(rugby)     #sends inverse matrix value from rugby to football (above) 
-                            #then to inv.myMatrix in parent frame
-    print(rugby)     ##troubleshooting changing inv.myMatrix to rugby# this prints the new inverse matrix located in parent frame.        
+                            #then to inv.myMatrix in parent frame (to cache)
+    print(rugby)     ## this prints the new inverse matrix.        
 }
 
 ###troubleshooting scripts
@@ -65,16 +65,16 @@ cacheSolve <- function(x, ...) {
 ## first run the code to source it to R (highlight it and click run in Rstudio)
 ##
 ## testmtx <- matrix(c(6,2,8,4),2,2) #this is a 2*2 matrix to be inverted.
-## myMatrix_object <- makeCacheMatrix(testmtx) #this is a list of 4 getters/setters functions
+## myMatrix_object <- makeCacheMatrix(testmtx) #list of 4 getters/setters functions
 ## cacheSolve(myMatrix_object)  # the first time run, should be no "cached" message
 ## cacheSolve(myMatrix_object)  # the second time run, SHOULD be a "cached" message
 ##
+## new.matrix <- matrix(c(3,1,7,5),2,2) # this creates a new different matrix
+## myMatrix_object$set(new.matrix) # this loads the new matrix into the function 
+## cacheSolve(myMatrix_object)  # inverts updated matrix (no "cached" message)
+## cacheSolve(myMatrix_object)  # the second time run, SHOULD be a "cached" message
 ##
-##
-##
-##
-##
-##
+## 
 ## Thank you.
 ##
         
