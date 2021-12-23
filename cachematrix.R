@@ -11,7 +11,7 @@
 makeCacheMatrix <- function(myMatrix = matrix()) {
     inv.myMatrix <- NULL
     set <- function(s.myMatrix) {
-        print('updated input matrix')  # notify matrix is updated
+        print ("updated input matrix")  # notify matrix is updated
         myMatrix <<- s.myMatrix
         print(myMatrix) # display updated matrix
         inv.myMatrix <<- NULL
@@ -22,7 +22,6 @@ makeCacheMatrix <- function(myMatrix = matrix()) {
     list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
 #this output list is a list of 4 named functions
 }
-
 
 ## cacheSolve function (below) has object created by function above as input.
 ## it first calls for the inverse matrix value stored in the closure of makeCacheMatrix()
@@ -44,17 +43,9 @@ cacheSolve <- function(x, ...) {
     newdata <- x$get()      #runs the get function from the list x an assigns the matrix to newdata
     rugby <- solve(newdata, ...) #takes inverse of matrix and assigns to rugby
     x$setInverse(rugby)     #sends inverse matrix value from rugby to football (above) 
-                            #then to inv.myMatrix in parent frame (to cache)
-    print(rugby)     ## this prints the new inverse matrix.        
+                            #then to inv.myMatrix in above parent frame (to cache)
+    print(rugby)        ## this prints the new (not cached) inverse matrix.        
 }
-
-###troubleshooting scripts
-### myMatrix_object <- makeCacheMatrix(testmtx)
-###
-###
-### myMatrix_object$set(new.matrix)
-### cacheSolve(myMatrix_object)
-
 
 
 ##
@@ -62,18 +53,23 @@ cacheSolve <- function(x, ...) {
 ##
 ## Please use the following commands (or something similar) to test this:
 ##
-## first run the code to source it to R (highlight it and click run in Rstudio)
+## first run the code (highlight it all and click 'run' in Rstudio)
+## then please run the following commands in the console:
 ##
 ## testmtx <- matrix(c(6,2,8,4),2,2) #this is a 2*2 matrix to be inverted.
+## print(testmtx) # to see the matrix just created
 ## myMatrix_object <- makeCacheMatrix(testmtx) #list of 4 getters/setters functions
 ## cacheSolve(myMatrix_object)  # the first time run, should be no "cached" message
 ## cacheSolve(myMatrix_object)  # the second time run, SHOULD be a "cached" message
 ##
 ## new.matrix <- matrix(c(3,1,7,5),2,2) # this creates a new different matrix
 ## myMatrix_object$set(new.matrix) # this loads the new matrix into the function 
+##        ## the set() function will give an update message and print the new matrix
 ## cacheSolve(myMatrix_object)  # inverts updated matrix (no "cached" message)
 ## cacheSolve(myMatrix_object)  # the second time run, SHOULD be a "cached" message
 ##
+## 
+## This was created using R version 4.1.2
 ## 
 ## Thank you.
 ##
