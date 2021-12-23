@@ -1,36 +1,81 @@
-## Put comments here that give an overall description of what your
-## functions do
+## The following two functions, makeCacheMatrix and cacheSolve work together
+## to use lexical scoping to calculate the inverse of a matrix, and cache
+## the value of the matrix. If the inverse of the matrix is asked for repeatedly
+## without changing the original matrix, then it is not recalculated, 
+## the cached value of the inverse matrix is used.
 
-## Write a short comment describing this function
+
+## makeCacheMatrix function (below) creates a list of 4 getters/setters functions
+## the output (list) should be assigned to an object that will be input to cacheSolve
 
 makeCacheMatrix <- function(myMatrix = matrix()) {
     inv.myMatrix <- NULL
     set <- function(s.myMatrix) {
+        print('resetting input matrix')  #troubleshooting
         myMatrix <<- s.myMatrix
+        print(c("setted value", myMatrix)) #troubleshooting
         inv.myMatrix <<- NULL
     }
     get <- function() myMatrix
     setInverse <- function(football) inv.myMatrix <<- football
     getInverse <- function() inv.myMatrix
     list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
-    
-
-    
-
-    
-        
+#this output list is a list of 4 named functions
 }
 
 
-## Write a short comment describing this function
+## cacheSolve function (below) has object created by function above as input.
+## it first calls for the inverse matrix value stored in the closure of makeCacheMatrix()
+## and tests if it is null. if it's not null, then it uses that value without recalculating
+## if it is null, it calculates the inverse then it stores that value
+## in the closure of makeCacheMatrix by calling the setInverse() subfunction.
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+    amInull <- x$getInverse()      #x, a list of 4 functions is formal arg for cacheSolve. A list is input so list becomes x. 
+    if(!is.null(amInull)) {
+        message("getting cached data")
+        return(amInull)         #amInull is the value of the cached inv.myMatrix so this works
+    }
+                                #if the cache is not null then the cached matrix is returned
+                                #and the code below this line is not executed.
+                                #if the cache IS null, the code below IS executed.    
+    
+    newdata <- x$get()      #runs the get function from the list x an assigns the matrix to newdata
+    rugby <- solve(newdata, ...) #takes inverse of matrix and assigns to rugby
+    x$setInverse(rugby)     #sends inverse matrix value from rugby to football (above) 
+                            #then to inv.myMatrix in parent frame
+    print(rugby)     ##troubleshooting changing inv.myMatrix to rugby# this prints the new inverse matrix located in parent frame.        
 }
 
+###troubleshooting scripts
+### myMatrix_object <- makeCacheMatrix(testmtx)
+###
+###
+### myMatrix_object$set(new.matrix)
+### cacheSolve(myMatrix_object)
 
 
 
-##Sandbox
+##
+## Dear Grader, 
+##
+## Please use the following commands (or something similar) to test this:
+##
+## first run the code to source it to R (highlight it and click run in Rstudio)
+##
+## testmtx <- matrix(c(6,2,8,4),2,2) #this is a 2*2 matrix to be inverted.
+## myMatrix_object <- makeCacheMatrix(testmtx) #this is a list of 4 getters/setters functions
+## cacheSolve(myMatrix_object)  # the first time run, should be no "cached" message
+## cacheSolve(myMatrix_object)  # the second time run, SHOULD be a "cached" message
+##
+##
+##
+##
+##
+##
+##
+## Thank you.
+##
+        
 
-myMatrix <- matrix(c(6,2,8,4), nrow = 2, ncol = 2)
